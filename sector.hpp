@@ -1,6 +1,7 @@
 #include <GLUT/glut.h>
 #include <math.h>
 #include <iostream>
+#include <string>
 class Sector
 {
 private:
@@ -13,12 +14,11 @@ public:
         color[1] = g;
         color[2] = b;
     }
-    void draw(int r, int startAngle, int stopAngle, int depthIndex, int xpos, int ypos)
+    void draw(int r, int startAngle, int stopAngle, int depthIndex)
     {
         float x = 0;
         float y = 0;
         glPushMatrix();
-        glTranslatef(xpos, ypos, 0);
         glColor3fv(color);
         x = r * cos((startAngle * 3.142) / 180);
         y = r * sin((startAngle * 3.142) / 180);
@@ -26,7 +26,7 @@ public:
         glVertex3f(0, 0, depthIndex);
         glVertex3f(x, y, depthIndex);
         glEnd();
-        glBegin(GL_POLYGON);
+        glBegin(GL_POINTS);
         for (float t = startAngle; t <= stopAngle; t += 0.001)
         {
             float angle = (t * 3.142) / 180;
@@ -39,6 +39,14 @@ public:
         glVertex3f(x, y, depthIndex);
         glVertex3f(0, 0, depthIndex);
         glEnd();
+        glPopMatrix();
+    }
+    void drawWing(int state, int depthIndex, int xpos, int ypos)
+    {
+        glPushMatrix();
+        glTranslatef(xpos, ypos, 0);
+        glRotatef(state, 0, 0, 1);
+        draw(400, 45, 135, depthIndex);
         glPopMatrix();
     }
 };
