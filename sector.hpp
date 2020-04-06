@@ -26,7 +26,7 @@ public:
         glVertex3f(0, 0, depthIndex);
         glVertex3f(x, y, depthIndex);
         glEnd();
-        glBegin(GL_POINTS);
+        glBegin(GL_POLYGON);
         for (float t = startAngle; t <= stopAngle; t += 0.001)
         {
             float angle = (t * 3.142) / 180;
