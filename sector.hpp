@@ -22,11 +22,9 @@ public:
         glColor3fv(color);
         x = r * cos((startAngle * 3.142) / 180);
         y = r * sin((startAngle * 3.142) / 180);
-        glBegin(GL_LINES);
-        glVertex3f(0, 0, depthIndex);
-        glVertex3f(x, y, depthIndex);
-        glEnd();
-        glBegin(GL_POINTS);
+        float t1x = x;
+        float t1y = y;
+        glBegin(GL_POLYGON);
         for (float t = startAngle; t <= stopAngle; t += 0.001)
         {
             float angle = (t * 3.142) / 180;
@@ -35,8 +33,9 @@ public:
             glVertex3f(x, y, depthIndex);
         }
         glEnd();
-        glBegin(GL_LINES);
+        glBegin(GL_TRIANGLES);
         glVertex3f(x, y, depthIndex);
+        glVertex3f(t1x, t1y, depthIndex);
         glVertex3f(0, 0, depthIndex);
         glEnd();
         glPopMatrix();

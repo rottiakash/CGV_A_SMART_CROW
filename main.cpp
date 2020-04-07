@@ -1,9 +1,5 @@
 #include <GLUT/glut.h>
-#include "circle.hpp"
-#include "line.hpp"
-#include "ellipse.hpp"
-#include "sector.hpp"
-#include "Triangle.hpp"
+#include "bird.hpp"
 #define FLAP_DOWN -180
 #define FLAP_UP 0
 class State
@@ -24,21 +20,8 @@ void init(void)
 void displayScene1(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    /*         Circle circle;
-    circle.setColor(0, 0, 0);
-    circle.draw(500, 2000, 1000, 1);
-    Line line;
-    line.setColor(0, 0, 0);
-    line.draw(1000, 1000, 2000, 2000, 1);
-    Ellipse ellipse;
-    ellipse.setColor(0, 0, 0);
-    ellipse.draw(1000, 1000, 1000, 500, 1);
-    Sector sector;
-    sector.setColor(0, 0, 0);
-    sector.drawWing(State::flap, 1, 2000, 2000); */
-    Triangle triangle;
-    triangle.setColor(0, 0, 0);
-    triangle.draw(1000, 1000, 3000, 1000, 2000, 3000, 1);
+    Bird bird;
+    bird.drawBird(State::flap, 2000, 2000);
     glFlush();
     glutSwapBuffers();
 }
