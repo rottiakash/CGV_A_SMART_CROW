@@ -1,0 +1,8 @@
+version: '3'
+services:
+  vnc:
+    image: rottiakash/6thsem-vtu
+    ports:
+      - "80:80"
+    volumes: 
+      - .:/content
