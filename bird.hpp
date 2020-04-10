@@ -11,9 +11,10 @@ private:
     {
         Line line;
         line.setColor(0.128, 0.128, 0.128);
-        line.draw(0, 600, 200, 400, 1);
-        line.draw(200, 400, 0, 400, 1);
-        line.draw(200, 400, 0, 200, 1);
+        line.draw(200, 400, 0, 350, 1);
+        line.draw(200, 400, 30, 300, 1);
+        line.draw(200, 400, 50, 240, 1);
+        line.draw(200, 400, 110, 245, 1);
     }
     void body(void)
     {
