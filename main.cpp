@@ -1,4 +1,4 @@
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include "bird.hpp"
 #define FLAP_DOWN -180
 #define FLAP_UP 0

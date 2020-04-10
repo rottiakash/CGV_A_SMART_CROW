@@ -1,4 +1,4 @@
-#include <GLUT/glut.h>
+#include <GL/glut.h>
 #include "line.hpp"
 #include "ellipse.hpp"
 #include "sector.hpp"
