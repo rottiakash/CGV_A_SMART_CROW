@@ -5,17 +5,19 @@
 #include "stb_image.h"
 #define FLAP_DOWN -180
 #define FLAP_UP 0
-unsigned int texture, bg1;
+unsigned int bg1;
 class State
 {
 public:
     static int flap;
     static int birdXpos;
     static int scene;
+    static bool displayCloudS1;
 };
 int State::flap = FLAP_DOWN;
 int State::birdXpos = 0;
 int State::scene = 0;
+bool State::displayCloudS1 = false;
 void init(void)
 {
     glMatrixMode(GL_PROJECTION);
@@ -30,43 +32,11 @@ void displayScene1(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     Bird bird;
     bird.drawBird(State::flap, State::birdXpos, 2000);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glColor3f(1, 1, 1);
+    glDisable(GL_TEXTURE_2D);
+    if (State::displayCloudS1)
+        bird.cloud(3200, 2500, "Its a Sunny day", "I'm Thirsty");
     glEnable(GL_TEXTURE_2D);
-    glBegin(GL_QUADS);
-    glVertex3f(0, 4000, 1);
-    glTexCoord2f(0, 0);
-    glVertex3f(0, 4800, 1);
-    glTexCoord2f(0, 1);
-    glVertex3f(1500, 4800, 1);
-    glTexCoord2f(1, 1);
-    glVertex3f(1500, 4000, 1);
-    glTexCoord2f(1, 0);
-    glEnd();
-    //One cloud
-    glBegin(GL_QUADS);
-    glVertex3f(1700, 3200, 1);
-    glTexCoord2f(0, 0);
-    glVertex3f(1700, 4000, 1);
-    glTexCoord2f(0, 1);
-    glVertex3f(3200, 4000, 1);
-    glTexCoord2f(1, 1);
-    glVertex3f(3200, 3200, 1);
-    glTexCoord2f(1, 0);
-    glEnd();
-    // Two clouds
-    glBegin(GL_QUADS);
-    glVertex3f(3500, 3600, 1);
-    glTexCoord2f(0, 0);
-    glVertex3f(3500, 4400, 1);
-    glTexCoord2f(0, 1);
-    glVertex3f(5000, 4400, 1);
-    glTexCoord2f(1, 1);
-    glVertex3f(5000, 3600, 1);
-    glTexCoord2f(1, 0);
-    glEnd();
-    glFlush();
-    //backround
+    glColor3f(1, 1, 1);
     glBindTexture(GL_TEXTURE_2D, bg1);
     glBegin(GL_QUADS);
     glVertex3f(0, 0, 10);
@@ -93,6 +63,7 @@ void idle()
         }
         else
         {
+            State::displayCloudS1 = true;
             glutIdleFunc(NULL);
         }
     }
@@ -115,29 +86,6 @@ void timer(int value)
     glutPostRedisplay();
 }
 
-void loadTexture(void)
-{
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    // set the texture wrapping/filtering options (on the currently bound texture object)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load and generate the texture
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load("cloud.jpg", &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        //glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-}
 void loadBackground(void)
 {
     glGenTextures(1, &bg1);
@@ -149,7 +97,7 @@ void loadBackground(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load and generate the bg1
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("s1BG.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("s1BG2.jpg", &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -173,7 +121,6 @@ int main(int argc, char **argv)
     glutTimerFunc(1000, timer, 0);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
-    loadTexture();
     loadBackground();
     init();
     glutMainLoop();

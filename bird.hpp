@@ -52,6 +52,14 @@ private:
         triangle.draw(1000, 300, 1000, 500, 1150, 400, 2);
     }
 
+    void drawtext(float x, float y, char *s)
+    {
+        glColor3f(0, 0, 0);
+        glRasterPos2f(x, y);
+        for (int i = 0; s[i] != '\0'; i++)
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
+    }
+
 public:
     void drawBird(int flapState, int xpos, int ypos)
     {
@@ -63,6 +71,22 @@ public:
         face();
         eye();
         beak();
+        glFlush();
+        glPopMatrix();
+    }
+    void cloud(int xpos, int ypos, char *line1, char *line2)
+    {
+        glPushMatrix();
+        glTranslatef(xpos, ypos, 0);
+        Circle circle;
+        circle.setColor(1, 1, 1);
+        circle.draw(80, 80, 80, 1, false);
+        circle.draw(120, 270, 200, 1, false);
+        Ellipse ellipse;
+        ellipse.setColor(1, 1, 1);
+        ellipse.draw(680, 400, 300, 200, 1);
+        drawtext(520, 420, line1);
+        drawtext(520, 330, line2);
         glFlush();
         glPopMatrix();
     }
