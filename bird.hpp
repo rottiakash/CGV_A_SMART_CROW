@@ -22,7 +22,7 @@ private:
     {
         Ellipse ellipse;
         ellipse.setColor(0.128, 0.128, 0.128);
-        ellipse.draw(500, 400, 300, 200, 2, false,0,360);
+        ellipse.draw(500, 400, 300, 200, 2, false, 0, 360);
     }
     void wing(int flapState)
     {
@@ -86,7 +86,7 @@ public:
         circle.draw(120, 270, 200, 1, false);
         Ellipse ellipse;
         ellipse.setColor(1, 1, 1);
-        ellipse.draw(680, 400, 300, 200, 1,false,0,360);
+        ellipse.draw(680, 400, 300, 200, 1, false, 0, 360);
         drawtext(520, 420, line1);
         drawtext(520, 330, line2);
         glFlush();

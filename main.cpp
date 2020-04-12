@@ -8,7 +8,8 @@
 #define FLAP_DOWN -180
 #define FLAP_UP 0
 void drawtext(float, float, char *);
-unsigned int bg1, intro;
+void menuS2(void);
+unsigned int bg1, intro, bg2;
 
 class State
 {
@@ -18,12 +19,14 @@ public:
     static int scene;
     static bool displayCloudS1;
     static bool moveBird;
+    static bool water;
 };
 int State::flap = FLAP_DOWN;
 int State::birdXpos = 0;
 int State::scene = -1;
 bool State::displayCloudS1 = false;
 bool State::moveBird = false;
+bool State::water = false;
 void init(void)
 {
     glMatrixMode(GL_PROJECTION);
@@ -84,9 +87,27 @@ void displayScene1(void)
 void displayScene2(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_TEXTURE_2D);
     Pot pot;
-    pot.draw(2000, 2000, false);
+    pot.draw(3500, 400, State::water);
+    Bird bird;
+    bird.drawBird(FLAP_DOWN, 3200, 1400);
     glFlush();
+    glEnable(GL_TEXTURE_2D);
+    glColor3f(1, 1, 1);
+    glBindTexture(GL_TEXTURE_2D, bg2);
+    glBegin(GL_QUADS);
+    glVertex3f(0, 0, 10);
+    glTexCoord2f(0, 0);
+    glVertex3f(0, 5000, 10);
+    glTexCoord2f(0, 1);
+    glVertex3f(5000, 5000, 10);
+    glTexCoord2f(1, 1);
+    glVertex3f(5000, 0, 10);
+    glTexCoord2f(1, 0);
+    glEnd();
+    glFlush();
+    glDisable(GL_TEXTURE_2D);
     glutSwapBuffers();
 }
 void drawtext(float x, float y, char *s)
@@ -128,6 +149,7 @@ void moveBird(void)
             State::scene = 1;
             glutDisplayFunc(displayScene2);
             glutPostRedisplay();
+            menuS2();
         }
     }
 }
@@ -167,6 +189,45 @@ void keyboard(unsigned char key, int x, int y)
                 State::displayCloudS1 = false;
                 glutIdleFunc(moveBird);
             }
+}
+void processMenuS2(int option)
+{
+    switch (option)
+    {
+    case 1:
+        State::scene = -1;
+        State::birdXpos = 0;
+        glutDisplayFunc(displayIntro);
+        glutPostRedisplay();
+        break;
+    case 2:
+        if (State::water == false)
+            State::water = true;
+        else if (State::water == true)
+            State::water = false;
+        glutPostRedisplay();
+        break;
+    case 3:
+        exit(0);
+    }
+}
+void menuS2(void)
+{
+
+    int menu;
+
+    // create the menu and
+    // tell glut that "processMenuEvents" will
+    // handle the events
+    menu = glutCreateMenu(processMenuS2);
+
+    //add entries to our menu
+    glutAddMenuEntry("Reset", 1);
+    glutAddMenuEntry("Toggle Water Level", 2);
+    glutAddMenuEntry("Exit", 3);
+
+    // attach the menu to the right button
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 void loadBackground(void)
@@ -215,6 +276,29 @@ void loadIntro(void)
     }
     stbi_image_free(data);
 }
+void loadBackground2(void)
+{
+    glGenTextures(1, &bg2);
+    glBindTexture(GL_TEXTURE_2D, bg2);
+    // set the bg1 wrapping/filtering options (on the currently bound bg1 object)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load and generate the bg1
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("s2BG.psd", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load bg1" << std::endl;
+    }
+    stbi_image_free(data);
+}
 int main(int argc, char **argv)
 {
 
@@ -230,6 +314,7 @@ int main(int argc, char **argv)
     glEnable(GL_TEXTURE_2D);
     loadBackground();
     loadIntro();
+    loadBackground2();
     init();
     glutMainLoop();
 }
