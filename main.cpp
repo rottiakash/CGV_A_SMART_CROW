@@ -7,7 +7,10 @@
 #define FLAP_DOWN -180
 #define FLAP_UP 0
 void drawtext(float, float, char *);
-unsigned int bg1;
+unsigned int bg1, intro;
+
+//TODO: Add Header Gaurds
+
 class State
 {
 public:
@@ -19,7 +22,7 @@ public:
 };
 int State::flap = FLAP_DOWN;
 int State::birdXpos = 0;
-int State::scene = 0;
+int State::scene = -1;
 bool State::displayCloudS1 = false;
 bool State::moveBird = false;
 void init(void)
@@ -30,7 +33,26 @@ void init(void)
     glMatrixMode(GL_MODELVIEW);
     glClearColor(1, 1, 1, 1);
 }
-
+void displayIntro(void)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_TEXTURE_2D);
+    glColor3f(1, 1, 1);
+    glBindTexture(GL_TEXTURE_2D, intro);
+    glBegin(GL_QUADS);
+    glVertex3f(0, 0, 10);
+    glTexCoord2f(0, 0);
+    glVertex3f(0, 5000, 10);
+    glTexCoord2f(0, 1);
+    glVertex3f(5000, 5000, 10);
+    glTexCoord2f(1, 1);
+    glVertex3f(5000, 0, 10);
+    glTexCoord2f(1, 0);
+    glEnd();
+    glFlush();
+    glDisable(GL_TEXTURE_2D);
+    glutSwapBuffers();
+}
 void displayScene1(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -122,17 +144,6 @@ void onClick(int btn, int state, int x, int y)
             glutIdleFunc(idle);
     }
 }
-
-void keyboard(unsigned char key, int x, int y)
-{
-    if (State::displayCloudS1)
-        if (key == SPACEBAR)
-        {
-            State::displayCloudS1 = false;
-            glutIdleFunc(moveBird);
-        }
-}
-
 void timer(int value)
 {
     if (State::flap == FLAP_DOWN)
@@ -141,6 +152,25 @@ void timer(int value)
         State::flap = FLAP_DOWN;
     glutTimerFunc(500, timer, 0);
     glutPostRedisplay();
+}
+void keyboard(unsigned char key, int x, int y)
+{
+    if (State::scene == -1)
+    {
+        if (key == 's' || key == 'S')
+        {
+            State::scene = 0;
+            glutDisplayFunc(displayScene1);
+            glutPostRedisplay();
+        }
+    }
+    else if (State::scene == 0)
+        if (State::displayCloudS1)
+            if (key == SPACEBAR)
+            {
+                State::displayCloudS1 = false;
+                glutIdleFunc(moveBird);
+            }
 }
 
 void loadBackground(void)
@@ -166,6 +196,29 @@ void loadBackground(void)
     }
     stbi_image_free(data);
 }
+void loadIntro(void)
+{
+    glGenTextures(1, &intro);
+    glBindTexture(GL_TEXTURE_2D, intro);
+    // set the bg1 wrapping/filtering options (on the currently bound bg1 object)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load and generate the bg1
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("intro.psd", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load intro" << std::endl;
+    }
+    stbi_image_free(data);
+}
 int main(int argc, char **argv)
 {
 
@@ -173,13 +226,14 @@ int main(int argc, char **argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(1024, 1024);
     glutCreateWindow("A Smart Crow");
-    glutDisplayFunc(displayScene1);
+    glutDisplayFunc(displayIntro);
     glutMouseFunc(onClick);
     glutKeyboardFunc(keyboard);
     glutTimerFunc(1000, timer, 0);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
     loadBackground();
+    loadIntro();
     init();
     glutMainLoop();
 }
