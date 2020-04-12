@@ -9,8 +9,6 @@
 void drawtext(float, float, char *);
 unsigned int bg1, intro;
 
-//TODO: Add Header Gaurds
-
 class State
 {
 public:
