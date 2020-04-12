@@ -1,3 +1,5 @@
+#ifndef BIRD_H
+#define BIRD_H
 #include <GLUT/glut.h>
 #include "line.hpp"
 #include "ellipse.hpp"
@@ -91,3 +93,4 @@ public:
         glPopMatrix();
     }
 };
+#endif /* BIRD_H*/

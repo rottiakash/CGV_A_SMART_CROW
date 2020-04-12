@@ -1,3 +1,5 @@
+#ifndef LINE_H
+#define LINE_H
 #include <GLUT/glut.h>
 class Line
 {
@@ -21,3 +23,4 @@ public:
         glEnd();
     }
 };
+#endif /* LINE_H */

@@ -1,3 +1,5 @@
+#ifndef SECTOR_H
+#define SECTOR_H
 #include <GLUT/glut.h>
 #include <math.h>
 #include <iostream>
@@ -49,3 +51,4 @@ public:
         glPopMatrix();
     }
 };
+#endif /* SECTOR_H */

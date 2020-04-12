@@ -1,3 +1,5 @@
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
 #include <GLUT/glut.h>
 class Triangle
 {
@@ -21,3 +23,4 @@ public:
         glEnd();
     }
 };
+#endif /* TRIANGLE_H */

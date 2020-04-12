@@ -1,3 +1,5 @@
+#ifndef ELLIPSE_H
+#define ELLIPSE_H
 #include <GLUT/glut.h>
 #include <math.h>
 class Ellipse
@@ -30,3 +32,4 @@ public:
         glPopMatrix();
     }
 };
+#endif /* ELLIPSE_H */
