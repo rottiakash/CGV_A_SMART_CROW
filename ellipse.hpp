@@ -15,13 +15,36 @@ public:
         color[1] = g;
         color[2] = b;
     }
-    void draw(int xCenter, int yCenter, int Rx, int Ry, int depthIndex)
+    void draw(int xCenter, int yCenter, int Rx, int Ry, int depthIndex, bool hollow, int startAngle, int stopAngle)
     {
         glPushMatrix();
         glTranslatef(xCenter, yCenter, 0);
         glColor3fv(color);
-        glBegin(GL_POLYGON);
-        for (float i = 0; i <= 360; i += 0.001)
+        if (hollow)
+            glBegin(GL_POINTS);
+        else if (!hollow)
+            glBegin(GL_POLYGON);
+        for (float i = startAngle; i <= stopAngle; i += 0.001)
+        {
+            float x = Rx * cos((i * 3.142) / 180);
+            float y = Ry * sin((i * 3.142) / 180);
+            glVertex3f(x, y, depthIndex);
+        }
+        glEnd();
+        glFlush();
+        glPopMatrix();
+    }
+    void draw(int xCenter, int yCenter, int Rx, int Ry, int depthIndex, bool hollow, int startAngle, int stopAngle, int lineWidth)
+    {
+        glPushMatrix();
+        glTranslatef(xCenter, yCenter, 0);
+        glColor3fv(color);
+        glPointSize(lineWidth);
+        if (hollow)
+            glBegin(GL_POINTS);
+        else if (!hollow)
+            glBegin(GL_POLYGON);
+        for (float i = startAngle; i <= stopAngle; i += 0.001)
         {
             float x = Rx * cos((i * 3.142) / 180);
             float y = Ry * sin((i * 3.142) / 180);

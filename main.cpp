@@ -1,6 +1,7 @@
 #include <GLUT/glut.h>
 #include <iostream>
 #include "bird.hpp"
+#include "pot.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #define SPACEBAR 32
 #include "stb_image.h"
@@ -83,11 +84,8 @@ void displayScene1(void)
 void displayScene2(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glBegin(GL_LINES);
-    glColor3f(0, 0, 0);
-    glVertex3f(1000, 1000, 1);
-    glVertex3f(2000, 2000, 1);
-    glEnd();
+    Pot pot;
+    pot.draw(2000, 2000, false);
     glFlush();
     glutSwapBuffers();
 }
