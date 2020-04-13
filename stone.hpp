@@ -1,0 +1,21 @@
+#ifndef STONE_H
+#define STONE_H
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+#include "ellipse.hpp"
+class Stone
+{
+public:
+    void draw(int xpos, int ypos)
+    {
+        glDisable(GL_TEXTURE_2D);
+        Ellipse ellipse;
+        ellipse.setColor(0.45, 0.44, 0.42);
+        ellipse.draw(xpos, ypos, 50, 30, 2, false, 0, 360);
+        glEnable(GL_TEXTURE_2D);
+    }
+};
+#endif /* BIRD_H*/

@@ -65,6 +65,18 @@ private:
         for (int i = 0; s[i] != '\0'; i++)
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
     }
+    void legs(void)
+    {
+        Line line;
+        line.setColor(0, 0, 0);
+        line.draw(600, 250, 500, 100, 2);
+        line.draw(500, 100, 550, 60, 2);
+        line.draw(500, 250, 400, 100, 2);
+        line.draw(400, 100, 460, 10, 2);
+        line.draw(550, 60, 620, 30, 1);
+        line.draw(550, 60, 530, 15, 1);
+        line.draw(460, 10, 510, 0, 1);
+    }
 
 public:
     void drawBird(int flapState, int xpos, int ypos)
@@ -74,6 +86,24 @@ public:
         tail();
         body();
         wing(flapState);
+        face();
+        eye();
+        beak();
+        glFlush();
+        glPopMatrix();
+    }
+    void drawBird(int flapState, int xpos, int ypos, char collapse[])
+    {
+        glPushMatrix();
+        glTranslatef(xpos, ypos, 0);
+        tail();
+        body();
+        glDisable(GL_TEXTURE_2D);
+        Ellipse ellipse;
+        ellipse.setColor(0, 0, 0);
+        ellipse.draw(500, 400, 200, 100, 1, false, 0, 360);
+        legs();
+        glEnable(GL_TEXTURE_2D);
         face();
         eye();
         beak();

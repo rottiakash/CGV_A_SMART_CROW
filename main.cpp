@@ -4,6 +4,7 @@
 #include <GL/glut.h>
 #endif
 #include <iostream>
+#include "stone.hpp"
 #include "bird.hpp"
 #include "pot.hpp"
 #define STB_IMAGE_IMPLEMENTATION
@@ -20,17 +21,21 @@ class State
 public:
     static int flap;
     static int birdXpos;
+    static int birdYpos;
     static int scene;
     static bool displayCloudS1;
     static bool moveBird;
     static bool water;
+    static bool yMove;
 };
 int State::flap = FLAP_DOWN;
 int State::birdXpos = 0;
+int State::birdYpos = 1400;
 int State::scene = -1;
 bool State::displayCloudS1 = false;
 bool State::moveBird = false;
 bool State::water = false;
+bool State::yMove = false;
 void init(void)
 {
     glMatrixMode(GL_PROJECTION);
@@ -91,11 +96,20 @@ void displayScene1(void)
 void displayScene2(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDisable(GL_TEXTURE_2D);
     Pot pot;
     pot.draw(3500, 400, State::water);
     Bird bird;
-    bird.drawBird(FLAP_DOWN, 3200, 1400);
+    if (!State::yMove)
+        bird.drawBird(FLAP_DOWN, 3200, 1400, "Collapse");
+    else if (State::yMove)
+        bird.drawBird(State::flap, 3200, State::birdYpos);
+    glFlush();
+    Stone stone;
+    stone.draw(4000, 300);
+    stone.draw(3700, 200);
+    stone.draw(3900, 150);
+    stone.draw(3500, 200);
+    stone.draw(4300, 100);
     glFlush();
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
@@ -157,13 +171,32 @@ void moveBird(void)
         }
     }
 }
-
+void birdDown(void)
+{
+    if (State::birdYpos >= 10)
+        State::birdYpos -= 500;
+    glutPostRedisplay();
+}
 void onClick(int btn, int state, int x, int y)
 {
     if (State::scene == 0)
     {
         if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
             glutIdleFunc(idle);
+    }
+    else if (State::scene == 1)
+    {
+        if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+        {
+            std::cout << x << ":" << y << std::endl;
+            if (x >= 698 && x <= 895 && y >= 750 && y <= 805)
+            {
+                std::cout << "Clicked" << std::endl;
+                State::yMove = true;
+                glutIdleFunc(birdDown);
+                glutPostRedisplay();
+            }
+        }
     }
 }
 void timer(int value)
