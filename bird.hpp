@@ -9,7 +9,7 @@
 #include "ellipse.hpp"
 #include "sector.hpp"
 #include "circle.hpp"
-#include "triangle.hpp"
+#include "Triangle.hpp"
 class Bird
 {
 private:
