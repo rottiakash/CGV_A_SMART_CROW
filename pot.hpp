@@ -21,8 +21,7 @@ public:
         glTranslatef(xpos, ypos, 0);
         glLineWidth(lw);
         ellipse.setColor(0, 0, 0);
-        ellipse.draw(400, 300, 400, 300, 9, true, 117, 360, lw);
-        ellipse.draw(400, 300, 400, 300, 9, true, 0, 60, lw);
+        ellipse.draw(400, 300, 400, 300, 9, true, 117, 420, lw);
         glColor3f(0, 0, 0);
         glBegin(GL_LINES);
         glVertex3f(220, 560, 8);
