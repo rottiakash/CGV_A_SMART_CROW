@@ -36,7 +36,6 @@ private:
         glRotatef(flapState, 0, 0, 1);
         sector.setColor(0, 0, 0);
         sector.draw(400, 55, 125, 1);
-        glFlush();
         glPopMatrix();
     }
     void face(void)
@@ -81,6 +80,7 @@ private:
 public:
     void drawBird(int flapState, int xpos, int ypos)
     {
+        glDisable(GL_TEXTURE_2D);
         glPushMatrix();
         glTranslatef(xpos, ypos, 0);
         tail();
@@ -89,25 +89,23 @@ public:
         face();
         eye();
         beak();
-        glFlush();
         glPopMatrix();
+        glEnable(GL_TEXTURE_2D);
     }
     void drawBird(int flapState, int xpos, int ypos, char collapse[])
     {
+        glDisable(GL_TEXTURE_2D);
         glPushMatrix();
         glTranslatef(xpos, ypos, 0);
         tail();
         body();
-        glDisable(GL_TEXTURE_2D);
         Ellipse ellipse;
         ellipse.setColor(0, 0, 0);
         ellipse.draw(500, 400, 200, 100, 1, false, 0, 360);
         legs();
-        glEnable(GL_TEXTURE_2D);
         face();
         eye();
         beak();
-        glFlush();
         glPopMatrix();
     }
     void cloud(int xpos, int ypos, char *line1, char *line2)
@@ -123,7 +121,6 @@ public:
         ellipse.draw(680, 400, 300, 200, 1, false, 0, 360);
         drawtext(520, 420, line1);
         drawtext(520, 330, line2);
-        glFlush();
         glPopMatrix();
     }
 };

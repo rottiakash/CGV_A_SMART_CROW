@@ -35,7 +35,6 @@ public:
             glVertex3f(x, y, depthIndex);
         }
         glEnd();
-        glFlush();
         glPopMatrix();
     }
     void draw(int xCenter, int yCenter, int Rx, int Ry, int depthIndex, bool hollow, int startAngle, int stopAngle, int lineWidth)
@@ -55,7 +54,6 @@ public:
             glVertex3f(x, y, depthIndex);
         }
         glEnd();
-        glFlush();
         glPopMatrix();
     }
 };

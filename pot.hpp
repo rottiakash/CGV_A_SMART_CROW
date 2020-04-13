@@ -35,7 +35,6 @@ public:
         glEnd();
         ellipse.draw(400, 980, 250, 100, 7, true, 0, 360, lw);
         ellipse.draw(400, 980, 200, 50, 7, true, 0, 360, lw);
-        glFlush();
         glPopMatrix();
         if (!hollow)
         {
@@ -56,9 +55,7 @@ public:
             ellipse.draw(400, 980, 250, 100, 8, false, 0, 360, lw);
             ellipse.setColor(0, 0, 0);
             ellipse.draw(400, 980, 200, 50, 7, false, 0, 360, lw);
-            glFlush();
             glPopMatrix();
-            glEnable(GL_TEXTURE_2D);
         }
     }
 };

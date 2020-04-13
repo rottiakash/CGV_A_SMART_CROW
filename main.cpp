@@ -3,7 +3,6 @@
 #else
 #include <GL/glut.h>
 #endif
-#include <iostream>
 #include "stone.hpp"
 #include "bird.hpp"
 #include "pot.hpp"
@@ -15,7 +14,8 @@
 void drawtext(float, float, char *);
 void menuS2(void);
 unsigned int bg1, intro, bg2;
-
+char *line1 = "I cannot reach";
+char *line2 = "the water";
 class State
 {
 public:
@@ -24,6 +24,7 @@ public:
     static int birdYpos;
     static int scene;
     static bool displayCloudS1;
+    static bool displayCloudS2;
     static bool moveBird;
     static bool water;
     static bool yMove;
@@ -31,8 +32,9 @@ public:
 int State::flap = FLAP_DOWN;
 int State::birdXpos = 0;
 int State::birdYpos = 1400;
-int State::scene = -1;
+int State::scene = 1;
 bool State::displayCloudS1 = false;
+bool State::displayCloudS2 = true;
 bool State::moveBird = false;
 bool State::water = false;
 bool State::yMove = false;
@@ -43,6 +45,12 @@ void init(void)
     glOrtho(0, 5000, 0, 5000, 0, -500);
     glMatrixMode(GL_MODELVIEW);
     glClearColor(1, 1, 1, 1);
+}
+void changeCloud(int value)
+{
+    line1 = "Let me use";
+    line2 = "Some Stones";
+    glutPostRedisplay();
 }
 void displayIntro(void)
 {
@@ -96,21 +104,22 @@ void displayScene1(void)
 void displayScene2(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_TEXTURE_2D);
     Pot pot;
     pot.draw(3500, 400, State::water);
     Bird bird;
+    if (State::displayCloudS2)
+        bird.cloud(4000, 2000, line1, line2);
     if (!State::yMove)
         bird.drawBird(FLAP_DOWN, 3200, 1400, "Collapse");
     else if (State::yMove)
         bird.drawBird(State::flap, 3200, State::birdYpos);
-    glFlush();
     Stone stone;
     stone.draw(4000, 300);
     stone.draw(3700, 200);
     stone.draw(3900, 150);
     stone.draw(3500, 200);
     stone.draw(4300, 100);
-    glFlush();
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
     glBindTexture(GL_TEXTURE_2D, bg2);
@@ -124,9 +133,9 @@ void displayScene2(void)
     glVertex3f(5000, 0, 10);
     glTexCoord2f(1, 0);
     glEnd();
-    glFlush();
     glDisable(GL_TEXTURE_2D);
     glutSwapBuffers();
+    glutTimerFunc(2000, changeCloud, 0);
 }
 void drawtext(float x, float y, char *s)
 {
@@ -146,7 +155,6 @@ void idle()
         else
         {
             State::displayCloudS1 = true;
-            glFlush();
             glutIdleFunc(NULL);
         }
     }
@@ -171,10 +179,24 @@ void moveBird(void)
         }
     }
 }
+void birdUp(void)
+{
+    if (State::birdYpos <= 1400)
+        State::birdYpos += 300;
+    else
+    {
+        State::yMove = false;
+    }
+    glutPostRedisplay();
+}
 void birdDown(void)
 {
     if (State::birdYpos >= 10)
-        State::birdYpos -= 500;
+        State::birdYpos -= 300;
+    else
+    {
+        glutIdleFunc(birdUp);
+    }
     glutPostRedisplay();
 }
 void onClick(int btn, int state, int x, int y)
@@ -188,11 +210,10 @@ void onClick(int btn, int state, int x, int y)
     {
         if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
         {
-            std::cout << x << ":" << y << std::endl;
             if (x >= 698 && x <= 895 && y >= 750 && y <= 805)
             {
-                std::cout << "Clicked" << std::endl;
                 State::yMove = true;
+                State::displayCloudS2 = false;
                 glutIdleFunc(birdDown);
                 glutPostRedisplay();
             }
@@ -232,8 +253,15 @@ void processMenuS2(int option)
     switch (option)
     {
     case 1:
-        State::scene = -1;
+        State::flap = FLAP_DOWN;
         State::birdXpos = 0;
+        State::birdYpos = 1400;
+        State::scene = -1;
+        State::displayCloudS1 = false;
+        State::displayCloudS2 = true;
+        State::moveBird = false;
+        State::water = false;
+        State::yMove = false;
         glutDisplayFunc(displayIntro);
         glutPostRedisplay();
         break;
@@ -343,12 +371,11 @@ int main(int argc, char **argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(1024, 1024);
     glutCreateWindow("A Smart Crow");
-    glutDisplayFunc(displayIntro);
+    glutDisplayFunc(displayScene2);
     glutMouseFunc(onClick);
     glutKeyboardFunc(keyboard);
     glutTimerFunc(1000, timer, 0);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
     loadBackground();
     loadIntro();
     loadBackground2();

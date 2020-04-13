@@ -36,7 +36,6 @@ public:
             glVertex3f(x, y, depthIndex);
         }
         glEnd();
-        glFlush();
         glPopMatrix();
     }
 };

@@ -15,7 +15,6 @@ public:
         Ellipse ellipse;
         ellipse.setColor(0.45, 0.44, 0.42);
         ellipse.draw(xpos, ypos, 50, 30, 2, false, 0, 360);
-        glEnable(GL_TEXTURE_2D);
     }
 };
 #endif /* BIRD_H*/
