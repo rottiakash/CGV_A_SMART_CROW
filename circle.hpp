@@ -29,7 +29,7 @@ public:
             glBegin(GL_POLYGON);
         else
             glBegin(GL_POINTS);
-        for (int i = 0; i <= 360; i += 30)
+        for (int i = 0; i <= 360; i++)
         {
             float x = r * cos((i * 3.142) / 180);
             float y = r * sin((i * 3.142) / 180);

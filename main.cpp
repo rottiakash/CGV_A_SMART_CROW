@@ -140,7 +140,7 @@ void drawtext(float x, float y, char *s)
 {
     glRasterPos2f(x, y);
     for (int i = 0; s[i] != '\0'; i++)
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
 }
 void idle()
 {
@@ -148,7 +148,7 @@ void idle()
     {
         if (State::birdXpos <= 2000)
         {
-            State::birdXpos += 50;
+            State::birdXpos += 30;
             glutPostRedisplay();
         }
         else
@@ -165,7 +165,7 @@ void moveBird(void)
     {
         if (State::birdXpos <= 5000)
         {
-            State::birdXpos += 50;
+            State::birdXpos += 30;
             glutPostRedisplay();
         }
         else
@@ -182,7 +182,7 @@ void birdUp(void)
 {
     if (State::birdYpos <= 1300)
     {
-        State::birdYpos += 50;
+        State::birdYpos += 30;
         glutPostRedisplay();
     }
     else
@@ -196,7 +196,7 @@ void birdDown(void)
 {
     if (State::birdYpos >= 10)
     {
-        State::birdYpos -= 50;
+        State::birdYpos -= 30;
         glutPostRedisplay();
     }
     else
@@ -216,7 +216,7 @@ void onClick(int btn, int state, int x, int y)
     {
         if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
         {
-            if (x >= 698 && x <= 895 && y >= 750 && y <= 805)
+            //if (x >= 698 && x <= 895 && y >= 750 && y <= 805)
             {
                 State::yMove = true;
                 State::displayCloudS2 = false;
@@ -375,7 +375,7 @@ int main(int argc, char **argv)
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(1024, 1024);
+    glutInitWindowSize(1440, 800);
     glutCreateWindow("A Smart Crow");
     glutDisplayFunc(displayIntro);
     glutMouseFunc(onClick);
