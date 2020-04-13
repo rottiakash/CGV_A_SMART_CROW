@@ -28,7 +28,7 @@ public:
             glBegin(GL_POINTS);
         else if (!hollow)
             glBegin(GL_POLYGON);
-        for (float i = startAngle; i <= stopAngle; i += 0.001)
+        for (float i = startAngle; i <= stopAngle; i++)
         {
             float x = Rx * cos((i * 3.142) / 180);
             float y = Ry * sin((i * 3.142) / 180);
@@ -47,7 +47,7 @@ public:
             glBegin(GL_POINTS);
         else if (!hollow)
             glBegin(GL_POLYGON);
-        for (float i = startAngle; i <= stopAngle; i += 0.001)
+        for (float i = startAngle; i <= stopAngle; i++)
         {
             float x = Rx * cos((i * 3.142) / 180);
             float y = Ry * sin((i * 3.142) / 180);

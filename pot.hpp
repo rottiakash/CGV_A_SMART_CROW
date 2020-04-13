@@ -6,7 +6,7 @@
 #include <GL/glut.h>
 #endif
 #include "ellipse.hpp"
-
+Ellipse ellipse;
 class Pot
 {
 public:
@@ -20,7 +20,6 @@ public:
         glPushMatrix();
         glTranslatef(xpos, ypos, 0);
         glLineWidth(lw);
-        Ellipse ellipse;
         ellipse.setColor(0, 0, 0);
         ellipse.draw(400, 300, 400, 300, 9, true, 117, 360, lw);
         ellipse.draw(400, 300, 400, 300, 9, true, 0, 60, lw);
@@ -42,7 +41,6 @@ public:
             glPushMatrix();
             glTranslatef(xpos, ypos, 0);
             glLineWidth(lw);
-            Ellipse ellipse;
             ellipse.setColor(0.43, 0.32, 0.24);
             ellipse.draw(400, 300, 400, 300, 9, false, 0, 360, lw);
             glColor3f(0.43, 0.32, 0.24);

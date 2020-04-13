@@ -31,7 +31,7 @@ public:
         float t1x = x;
         float t1y = y;
         glBegin(GL_POLYGON);
-        for (float t = startAngle; t <= stopAngle; t += 0.001)
+        for (float t = startAngle; t <= stopAngle; t += 30)
         {
             float angle = (t * 3.142) / 180;
             x = r * cos(angle);

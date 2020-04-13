@@ -16,6 +16,9 @@ void menuS2(void);
 unsigned int bg1, intro, bg2;
 char *line1 = "I cannot reach";
 char *line2 = "the water";
+Bird bird;
+Pot pot;
+Stone stone;
 class State
 {
 public:
@@ -75,7 +78,6 @@ void displayIntro(void)
 void displayScene1(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    Bird bird;
     bird.drawBird(State::flap, State::birdXpos, 2000);
     glDisable(GL_TEXTURE_2D);
     if (State::displayCloudS1)
@@ -105,16 +107,13 @@ void displayScene2(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_TEXTURE_2D);
-    Pot pot;
     pot.draw(3500, 400, State::water);
-    Bird bird;
     if (State::displayCloudS2)
         bird.cloud(4000, 2000, line1, line2);
     if (!State::yMove)
         bird.drawBird(FLAP_DOWN, 3200, 1400, "Collapse");
     else if (State::yMove)
         bird.drawBird(State::flap, 3200, State::birdYpos);
-    Stone stone;
     stone.draw(4000, 300);
     stone.draw(3700, 200);
     stone.draw(3900, 150);
@@ -134,8 +133,8 @@ void displayScene2(void)
     glTexCoord2f(1, 0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
-    glutSwapBuffers();
     glutTimerFunc(2000, changeCloud, 0);
+    glutSwapBuffers();
 }
 void drawtext(float x, float y, char *s)
 {
@@ -181,23 +180,30 @@ void moveBird(void)
 }
 void birdUp(void)
 {
-    if (State::birdYpos <= 1400)
-        State::birdYpos += 300;
+    if (State::birdYpos <= 1300)
+    {
+        State::birdYpos += 50;
+        glutPostRedisplay();
+    }
     else
     {
+        glutIdleFunc(NULL);
         State::yMove = false;
+        glutPostRedisplay();
     }
-    glutPostRedisplay();
 }
 void birdDown(void)
 {
     if (State::birdYpos >= 10)
-        State::birdYpos -= 300;
+    {
+        State::birdYpos -= 50;
+        glutPostRedisplay();
+    }
     else
     {
+        glutIdleFunc(NULL);
         glutIdleFunc(birdUp);
     }
-    glutPostRedisplay();
 }
 void onClick(int btn, int state, int x, int y)
 {
