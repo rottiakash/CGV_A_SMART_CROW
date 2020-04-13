@@ -31,6 +31,8 @@ public:
     static bool moveBird;
     static bool water;
     static bool yMove;
+    static int stones;
+    static bool mouthStone;
 };
 int State::flap = FLAP_DOWN;
 int State::birdXpos = 0;
@@ -41,6 +43,8 @@ bool State::displayCloudS2 = true;
 bool State::moveBird = false;
 bool State::water = false;
 bool State::yMove = false;
+bool State::mouthStone = false;
+int State::stones = 0;
 void init(void)
 {
     glMatrixMode(GL_PROJECTION);
@@ -51,9 +55,12 @@ void init(void)
 }
 void changeCloud(int value)
 {
-    line1 = "Let me use";
-    line2 = "Some Stones";
-    glutPostRedisplay();
+    if (State::stones == 0)
+    {
+        line1 = "Let me use";
+        line2 = "Some Stones";
+        glutPostRedisplay();
+    }
 }
 void displayIntro(void)
 {
@@ -107,18 +114,20 @@ void displayScene2(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_TEXTURE_2D);
-    pot.draw(3500, 400, State::water);
+    pot.draw(3500, 400, State::water, State::stones, stone);
     if (State::displayCloudS2)
         bird.cloud(4000, 2000, line1, line2);
     if (!State::yMove)
         bird.drawBird(FLAP_DOWN, 3200, 1400, "Collapse");
     else if (State::yMove)
         bird.drawBird(State::flap, 3200, State::birdYpos);
+    if (State::mouthStone)
+        stone.draw(4350, 380 + State::birdYpos);
     stone.draw(4000, 300);
-    stone.draw(3700, 200);
+    stone.draw(4200, 200);
     stone.draw(3900, 150);
-    stone.draw(3500, 200);
-    stone.draw(4300, 100);
+    stone.draw(4300, 200);
+    stone.draw(4500, 100);
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
     glBindTexture(GL_TEXTURE_2D, bg2);
@@ -133,7 +142,7 @@ void displayScene2(void)
     glTexCoord2f(1, 0);
     glEnd();
     glDisable(GL_TEXTURE_2D);
-    glutTimerFunc(2000, changeCloud, 0);
+    glutTimerFunc(3000, changeCloud, 0);
     glutSwapBuffers();
 }
 void drawtext(float x, float y, char *s)
@@ -189,18 +198,33 @@ void birdUp(void)
     {
         glutIdleFunc(NULL);
         State::yMove = false;
+        State::mouthStone = false;
+        if (State::stones < 3)
+        {
+            State::stones++;
+            line1 = "I Need more";
+            line2 = "Stones";
+        }
+        if (State::stones == 3)
+        {
+            line1 = "I can now";
+            line2 = "Drink Water";
+        }
+
+        State::displayCloudS2 = true;
         glutPostRedisplay();
     }
 }
 void birdDown(void)
 {
-    if (State::birdYpos >= 10)
+    if (State::birdYpos >= 10 && State::stones < 3)
     {
         State::birdYpos -= 30;
         glutPostRedisplay();
     }
     else
     {
+        State::mouthStone = true;
         glutIdleFunc(NULL);
         glutIdleFunc(birdUp);
     }
@@ -268,6 +292,8 @@ void processMenuS2(int option)
         State::moveBird = false;
         State::water = false;
         State::yMove = false;
+        State::mouthStone = false;
+        State::stones = 0;
         glutDisplayFunc(displayIntro);
         glutPostRedisplay();
         break;
@@ -294,7 +320,8 @@ void menuS2(void)
 
     //add entries to our menu
     glutAddMenuEntry("Reset", 1);
-    glutAddMenuEntry("Toggle Water Level", 2);
+    if (State::scene == 1)
+        glutAddMenuEntry("Toggle Water Level", 2);
     glutAddMenuEntry("Exit", 3);
 
     // attach the menu to the right button
@@ -386,5 +413,6 @@ int main(int argc, char **argv)
     loadIntro();
     loadBackground2();
     init();
+    menuS2();
     glutMainLoop();
 }
