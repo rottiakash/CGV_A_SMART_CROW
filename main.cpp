@@ -32,7 +32,7 @@ public:
 int State::flap = FLAP_DOWN;
 int State::birdXpos = 0;
 int State::birdYpos = 1400;
-int State::scene = 1;
+int State::scene = -1;
 bool State::displayCloudS1 = false;
 bool State::displayCloudS2 = true;
 bool State::moveBird = false;
@@ -371,7 +371,7 @@ int main(int argc, char **argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(1024, 1024);
     glutCreateWindow("A Smart Crow");
-    glutDisplayFunc(displayScene2);
+    glutDisplayFunc(displayIntro);
     glutMouseFunc(onClick);
     glutKeyboardFunc(keyboard);
     glutTimerFunc(1000, timer, 0);
