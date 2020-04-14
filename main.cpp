@@ -24,7 +24,6 @@ char *line4 = "";
 Bird bird;
 Pot pot;
 Stone stone;
-//TODO: Add Moral:  Think and work hard, you may find solution to any problem.
 class State
 {
 public:
