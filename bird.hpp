@@ -56,10 +56,16 @@ private:
         triangle.setColor(0, 0, 0);
         triangle.draw(1000, 300, 1000, 500, 1150, 400, 2);
     }
-
     void drawtext(float x, float y, char *s)
     {
         glColor3f(0, 0, 0);
+        glRasterPos2f(x, y);
+        for (int i = 0; s[i] != '\0'; i++)
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
+    }
+    void drawtext(float x, float y, char *s, char *Black)
+    {
+        glColor3f(1, 1, 1);
         glRasterPos2f(x, y);
         for (int i = 0; s[i] != '\0'; i++)
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
@@ -121,6 +127,21 @@ public:
         ellipse.draw(680, 400, 300, 200, 1, false, 0, 360);
         drawtext(500, 420, line1);
         drawtext(500, 330, line2);
+        glPopMatrix();
+    }
+    void cloud(int xpos, int ypos, char *line1, char *line2, char *Black)
+    {
+        glPushMatrix();
+        glTranslatef(xpos, ypos, 0);
+        Circle circle;
+        circle.setColor(0, 0, 0);
+        circle.draw(80, 80, 80, 1, false);
+        circle.draw(120, 270, 200, 1, false);
+        Ellipse ellipse;
+        ellipse.setColor(0, 0, 0);
+        ellipse.draw(680, 400, 300, 200, 1, false, 0, 360);
+        drawtext(500, 420, line1, "black");
+        drawtext(500, 330, line2, "black");
         glPopMatrix();
     }
 };

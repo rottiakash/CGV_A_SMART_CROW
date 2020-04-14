@@ -110,9 +110,16 @@ void displayScene1(void)
     glDisable(GL_TEXTURE_2D);
     if (State::displayCloudS1)
     {
-        bird.cloud(3200, 2500, "Its a Sunny day", "I'm Thirsty");
+        bird.cloud(3200, 2500, "Its a Sunny day", "I'm Thirsty", "black");
     }
     glColor3f(1, 1, 1);
+    glBegin(GL_QUADS);
+    glVertex3f(1900, 400, 5);
+    glVertex3f(2800, 400, 5);
+    glVertex3f(2800, 500, 5);
+    glVertex3f(1900, 500, 5);
+    glEnd();
+    glColor3f(0, 0, 0);
     drawtext(2100, 430, State::line);
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
@@ -152,7 +159,7 @@ void displayScene2(void)
     glColor3f(0, 0, 0);
     drawtext(1800, 4800, line3);
     drawtext(2000, 4600, line4);
-    drawtext(2100, 430, State::line);
+    drawtext(2100, 4400, State::line);
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
     glBindTexture(GL_TEXTURE_2D, bg2);
@@ -410,10 +417,10 @@ void loadBackground(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load and generate the bg1
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("s1BG2.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("S1BG.psd", &width, &height, &nrChannels, 0);
     if (data)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         //glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
