@@ -16,9 +16,13 @@ void menuS2(void);
 unsigned int bg1, intro, bg2;
 char *line1 = "I cannot reach";
 char *line2 = "the water";
+char *line3 = "";
+char *line4 = "";
 Bird bird;
 Pot pot;
 Stone stone;
+//TODO: Add Moral:  Think and work hard, you may find solution to any problem.
+//TODO: Keyboard to procede to moral
 class State
 {
 public:
@@ -33,6 +37,7 @@ public:
     static bool yMove;
     static int stones;
     static bool mouthStone;
+    static char *line;
 };
 int State::flap = FLAP_DOWN;
 int State::birdXpos = 0;
@@ -45,6 +50,7 @@ bool State::water = false;
 bool State::yMove = false;
 bool State::mouthStone = false;
 int State::stones = 0;
+char *State::line = "Click to continue";
 void init(void)
 {
     glMatrixMode(GL_PROJECTION);
@@ -59,6 +65,8 @@ void changeCloud(int value)
     {
         line1 = "Let me use";
         line2 = "Some Stones";
+        line3 = "Use Right Click Menu to toggle Water Level";
+        line4 = "Click the Stone to drop it in Pot";
         glutPostRedisplay();
     }
 }
@@ -90,9 +98,9 @@ void displayScene1(void)
     if (State::displayCloudS1)
     {
         bird.cloud(3200, 2500, "Its a Sunny day", "I'm Thirsty");
-        glColor3f(1, 1, 1);
-        drawtext(2100, 430, "Press SPACEBAR to continue");
     }
+    glColor3f(1, 1, 1);
+    drawtext(2100, 430, State::line);
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
     glBindTexture(GL_TEXTURE_2D, bg1);
@@ -128,6 +136,10 @@ void displayScene2(void)
     stone.draw(3900, 150);
     stone.draw(4300, 200);
     stone.draw(4500, 100);
+    glColor3f(0, 0, 0);
+    drawtext(1800, 4800, line3);
+    drawtext(2000, 4600, line4);
+    drawtext(2100, 430, State::line);
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
     glBindTexture(GL_TEXTURE_2D, bg2);
@@ -145,11 +157,31 @@ void displayScene2(void)
     glutTimerFunc(3000, changeCloud, 0);
     glutSwapBuffers();
 }
+void displayMoral(void)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_TEXTURE_2D);
+    glColor3f(1, 1, 1);
+    glBindTexture(GL_TEXTURE_2D, intro);
+    glBegin(GL_QUADS);
+    glVertex3f(0, 0, 10);
+    glTexCoord2f(0, 0);
+    glVertex3f(0, 5000, 10);
+    glTexCoord2f(0, 1);
+    glVertex3f(5000, 5000, 10);
+    glTexCoord2f(1, 1);
+    glVertex3f(5000, 0, 10);
+    glTexCoord2f(1, 0);
+    glEnd();
+    glFlush();
+    glDisable(GL_TEXTURE_2D);
+    glutSwapBuffers();
+}
 void drawtext(float x, float y, char *s)
 {
     glRasterPos2f(x, y);
     for (int i = 0; s[i] != '\0'; i++)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
 }
 void idle()
 {
@@ -162,6 +194,7 @@ void idle()
         }
         else
         {
+            State::line = "Press SPACEBAR to continue";
             State::displayCloudS1 = true;
             glutIdleFunc(NULL);
         }
@@ -181,6 +214,7 @@ void moveBird(void)
         {
             glutIdleFunc(NULL);
             State::scene = 1;
+            State::line = "";
             glutDisplayFunc(displayScene2);
             glutPostRedisplay();
             menuS2();
@@ -209,6 +243,7 @@ void birdUp(void)
         {
             line1 = "I can now";
             line2 = "Drink Water";
+            State::line = "Press SPACEBAR to continue";
         }
 
         State::displayCloudS2 = true;
@@ -240,7 +275,6 @@ void onClick(int btn, int state, int x, int y)
     {
         if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
         {
-            //if (x >= 698 && x <= 895 && y >= 750 && y <= 805)
             {
                 State::yMove = true;
                 State::displayCloudS2 = false;
@@ -271,12 +305,36 @@ void keyboard(unsigned char key, int x, int y)
         }
     }
     else if (State::scene == 0)
+    {
         if (State::displayCloudS1)
+        {
             if (key == SPACEBAR)
             {
                 State::displayCloudS1 = false;
                 glutIdleFunc(moveBird);
             }
+        }
+    }
+    else if (State::scene == 1)
+    {
+        if (line1 == "I can now")
+        {
+            if (key == SPACEBAR)
+            {
+                State::scene = 2;
+                glutDisplayFunc(displayMoral);
+                glutPostRedisplay();
+            }
+        }
+    }
+    else if (State::scene == 2)
+    {
+
+        if (key == 27)
+        {
+            exit(0);
+        }
+    }
 }
 void processMenuS2(int option)
 {
@@ -402,8 +460,8 @@ int main(int argc, char **argv)
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(1440, 800);
     glutCreateWindow("A Smart Crow");
+    glutFullScreen();
     glutDisplayFunc(displayIntro);
     glutMouseFunc(onClick);
     glutKeyboardFunc(keyboard);

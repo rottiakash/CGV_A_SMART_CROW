@@ -119,8 +119,8 @@ public:
         Ellipse ellipse;
         ellipse.setColor(1, 1, 1);
         ellipse.draw(680, 400, 300, 200, 1, false, 0, 360);
-        drawtext(520, 420, line1);
-        drawtext(520, 330, line2);
+        drawtext(500, 420, line1);
+        drawtext(500, 330, line2);
         glPopMatrix();
     }
 };
