@@ -4,6 +4,8 @@
 #include <GL/glut.h>
 #endif
 #include "stone.hpp"
+#include <fstream>
+#include <string>
 #include "bird.hpp"
 #include "pot.hpp"
 #define STB_IMAGE_IMPLEMENTATION
@@ -12,8 +14,9 @@
 #define FLAP_DOWN -180
 #define FLAP_UP 0
 void drawtext(float, float, char *);
+std::string getFileContents(std::ifstream &);
 void menuS2(void);
-unsigned int bg1, intro, bg2;
+unsigned int bg1, intro, bg2, moral;
 char *line1 = "I cannot reach";
 char *line2 = "the water";
 char *line3 = "";
@@ -22,7 +25,6 @@ Bird bird;
 Pot pot;
 Stone stone;
 //TODO: Add Moral:  Think and work hard, you may find solution to any problem.
-//TODO: Keyboard to procede to moral
 class State
 {
 public:
@@ -58,6 +60,18 @@ void init(void)
     glOrtho(0, 5000, 0, 5000, 0, -500);
     glMatrixMode(GL_MODELVIEW);
     glClearColor(1, 1, 1, 1);
+}
+void doExit(void)
+{
+    std::ifstream Reader("ART.txt"); //Open file
+
+    std::string Art = getFileContents(Reader); //Get file
+
+    std::cout << Art << std::endl; //Print it to the screen
+
+    Reader.close(); //Close file
+
+    exit(0);
 }
 void changeCloud(int value)
 {
@@ -162,7 +176,7 @@ void displayMoral(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
-    glBindTexture(GL_TEXTURE_2D, intro);
+    glBindTexture(GL_TEXTURE_2D, moral);
     glBegin(GL_QUADS);
     glVertex3f(0, 0, 10);
     glTexCoord2f(0, 0);
@@ -332,7 +346,7 @@ void keyboard(unsigned char key, int x, int y)
 
         if (key == 27)
         {
-            exit(0);
+            doExit();
         }
     }
 }
@@ -363,7 +377,7 @@ void processMenuS2(int option)
         glutPostRedisplay();
         break;
     case 3:
-        exit(0);
+        doExit();
     }
 }
 void menuS2(void)
@@ -432,6 +446,29 @@ void loadIntro(void)
     }
     stbi_image_free(data);
 }
+void loadMoral(void)
+{
+    glGenTextures(1, &moral);
+    glBindTexture(GL_TEXTURE_2D, moral);
+    // set the bg1 wrapping/filtering options (on the currently bound bg1 object)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load and generate the bg1
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("MORAL.psd", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load intro" << std::endl;
+    }
+    stbi_image_free(data);
+}
 void loadBackground2(void)
 {
     glGenTextures(1, &bg2);
@@ -470,7 +507,30 @@ int main(int argc, char **argv)
     loadBackground();
     loadIntro();
     loadBackground2();
+    loadMoral();
     init();
     menuS2();
     glutMainLoop();
+}
+
+std::string getFileContents(std::ifstream &File)
+{
+    std::string Lines = ""; //All lines
+
+    if (File) //Check if everything is good
+    {
+        while (File.good())
+        {
+            std::string TempLine;         //Temp line
+            std::getline(File, TempLine); //Get temp line
+            TempLine += "\n";             //Add newline character
+
+            Lines += TempLine; //Add newline
+        }
+        return Lines;
+    }
+    else //Return error
+    {
+        return "ERROR File does not exist.";
+    }
 }
