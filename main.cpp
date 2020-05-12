@@ -112,13 +112,7 @@ void displayScene1(void)
     {
         bird.cloud(3200, 2500, "Its a Sunny day", "I'm Thirsty", "black");
     }
-    glColor3f(1, 1, 1);
-    glBegin(GL_QUADS);
-    glVertex3f(1900, 400, 5);
-    glVertex3f(2800, 400, 5);
-    glVertex3f(2800, 500, 5);
-    glVertex3f(1900, 500, 5);
-    glEnd();
+
     glColor3f(0, 0, 0);
     drawtext(2100, 430, State::line);
     glEnable(GL_TEXTURE_2D);
@@ -201,7 +195,7 @@ void drawtext(float x, float y, char *s)
 {
     glRasterPos2f(x, y);
     for (int i = 0; s[i] != '\0'; i++)
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
 }
 void idle()
 {
