@@ -41,3 +41,4 @@ public:
 };
 
 #endif /* CIRCLE_H */
+

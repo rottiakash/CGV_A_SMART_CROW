@@ -24,7 +24,6 @@ char *line4 = "";
 Bird bird;
 Pot pot;
 Stone stone;
-//TODO: Add Moral:  Think and work hard, you may find solution to any problem.
 class State
 {
 public:
@@ -111,9 +110,10 @@ void displayScene1(void)
     glDisable(GL_TEXTURE_2D);
     if (State::displayCloudS1)
     {
-        bird.cloud(3200, 2500, "Its a Sunny day", "I'm Thirsty");
+        bird.cloud(3200, 2500, "Its a Sunny day", "I'm Thirsty", "black");
     }
-    glColor3f(1, 1, 1);
+
+    glColor3f(0, 0, 0);
     drawtext(2100, 430, State::line);
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
@@ -153,7 +153,7 @@ void displayScene2(void)
     glColor3f(0, 0, 0);
     drawtext(1800, 4800, line3);
     drawtext(2000, 4600, line4);
-    drawtext(2100, 430, State::line);
+    drawtext(2100, 4400, State::line);
     glEnable(GL_TEXTURE_2D);
     glColor3f(1, 1, 1);
     glBindTexture(GL_TEXTURE_2D, bg2);
@@ -195,7 +195,7 @@ void drawtext(float x, float y, char *s)
 {
     glRasterPos2f(x, y);
     for (int i = 0; s[i] != '\0'; i++)
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
 }
 void idle()
 {
